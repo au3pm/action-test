@@ -29,15 +29,13 @@ function run() {
   
   //console.log('['+Object.keys(client.issues).join(', ')+']');
   
-  /*
-  const issue = client.issues.get({
+  const issue2 = client.issues.get({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number
   });
-  */
   
-  console.log(issue);
+  console.log(issue2);
   
   client.issues.update({
     owner: issue.owner,
