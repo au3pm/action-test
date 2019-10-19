@@ -31,7 +31,7 @@ function run() {
   
   console.log('['+Object.keys(client.issues).join(', ')+']');
   
-  await client.issues.update({
+  client.issues.update({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number,
