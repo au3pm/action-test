@@ -15,5 +15,5 @@ jobs:
     - run: npm i @actions/github
     - name: Run a one-line script
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: node test.js
