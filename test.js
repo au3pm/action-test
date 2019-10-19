@@ -41,7 +41,7 @@ function run() {
     const package = data.title;
     const repo = body[0] || package;
     
-    client.repo.get({
+    client.repos.get({
       owner: owner,
       repo: repo
     }).then(response => response.data).then(data => {
