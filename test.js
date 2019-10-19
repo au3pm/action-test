@@ -60,8 +60,8 @@ function run() {
       });
 
       console.log("done");
-    });
-  }).catch(e => console.error(`there was a problem, getting repo: "${owner}/${repo}"`, e));
+    }).catch(e => console.error(`there was a problem, getting repo: "${owner}/${repo}"`, e));
+  });
 }
 
 run();
