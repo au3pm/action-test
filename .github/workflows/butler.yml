@@ -11,5 +11,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - run: npm i @actions/core
+    - run: npm i @actions/github
     - name: Run a one-line script
       run: node test.js
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
