@@ -3,7 +3,7 @@ var github = require('@actions/github');
 
 function run() {
   const client = github.GitHub = new github.GitHub(
-    core.getInput('repo-token', {required: true})
+    core.getInput('GITHUB_TOKEN', {required: true})
   );
   const context = github.context;
   
