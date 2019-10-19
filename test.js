@@ -29,11 +29,11 @@ function run() {
   
   //console.log('['+Object.keys(client.issues).join(', ')+']');
   
-  const issue2 = await client.issues.get({
+  const issue2 = client.issues.get({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number
-  });
+  }).then(response => console.log(response))
   
   console.log(issue2);
   
