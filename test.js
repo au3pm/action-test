@@ -27,7 +27,9 @@ function run() {
   
   const issue = context.issue;
   
-  await client.issues.close({
+  console.log('['+Object.keys(client.issues).join(', ')+']');
+  
+  client.issues.close({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number,
