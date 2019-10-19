@@ -60,7 +60,21 @@ function run() {
       });
 
       console.log("done");
-    }).catch(e => console.error(`there was a problem, getting repo: "${owner}/${repo}"`, e));
+    }).catch(e => {
+      client.issues.createComment({
+        owner: issue.owner,
+        repo: issue.repo,
+        issue_number: issue.number,
+        body: `"${owner}/${repo}": ${e.status}`
+      });
+      
+      client.issues.update({
+        owner: issue.owner,
+        repo: issue.repo,
+        issue_number: issue.number,
+        state: 'closed'
+      });
+    });
   });
 }
 
