@@ -13,7 +13,7 @@ function run() {
   }
   
   // Do nothing if its not a pr or issue
-  const isIssue: boolean = !!context.payload.issue;
+  const isIssue = !!context.payload.issue;
   if (!isIssue && !context.payload.pull_request) {
     console.log(
       'The event that triggered this action was not a pull request or issue, skipping.'
@@ -25,7 +25,7 @@ function run() {
     throw new Error('Internal error, no sender provided by GitHub');
   }
   
-  const issue: {owner: string; repo: string; number: number} = context.issue;
+  const issue = context.issue;
   
   await client.issues.close({
     owner: issue.owner,
