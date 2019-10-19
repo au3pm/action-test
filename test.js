@@ -31,11 +31,11 @@ function run() {
   
   console.log('['+Object.keys(client.issues).join(', ')+']');
   
-  client.issues.close({
+  await client.issues.update({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number,
-    body: 'test'
+    state: 'closed'
   });
   
   console.log("done");
