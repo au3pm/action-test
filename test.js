@@ -1,5 +1,5 @@
 var core = require('@actions/core');
-var github require('@actions/github');
+var github = require('@actions/github');
 
 function run() {
   const client: github.GitHub = new github.GitHub(
