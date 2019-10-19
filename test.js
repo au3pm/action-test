@@ -33,18 +33,35 @@ function run() {
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number
-  }).then(response => console.log(response))
-  
-  console.log(issue2);
-  
-  client.issues.update({
-    owner: issue.owner,
-    repo: issue.repo,
-    issue_number: issue.number,
-    state: 'closed'
-  });
-  
-  console.log("done");
+  }).then(response => response.data).then(data => {
+    
+    const body = data.body.match(/^(.*)$/mg);
+    
+    const owner = data.user.login;
+    const package = data.title;
+    const repo = body[0] || package;
+    
+    client.repo.get({
+      owner: owner,
+      repo: repo
+    }).then(response => response.data).then(data => {
+      const version = body[1] || 'FIXME';
+      const sha1 = body[2] || 'FIXME';
+    
+      //`${owner}/${package}`
+      console.log(data);
+
+
+      client.issues.update({
+        owner: issue.owner,
+        repo: issue.repo,
+        issue_number: issue.number,
+        state: 'closed'
+      });
+
+      console.log("done");
+    });
+  })
 }
 
 run();
