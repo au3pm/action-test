@@ -2,8 +2,6 @@ var core = require('@actions/core');
 var github = require('@actions/github');
 
 function run() {
-  console.log('['+Object.keys(process.env).join(', ')+']');
-  
   const client = github.GitHub = new github.GitHub(
     core.getInput('GITHUB_TOKEN', {required: true})
   );
@@ -16,9 +14,9 @@ function run() {
   
   // Do nothing if its not a pr or issue
   const isIssue = !!context.payload.issue;
-  if (!isIssue && !context.payload.pull_request) {
+  if (!isIssue && !!context.payload.pull_request) {
     console.log(
-      'The event that triggered this action was not a pull request or issue, skipping.'
+      'The event that triggered this action was a pull request or not a issue, skipping.'
     );
     return;
   }
@@ -29,7 +27,15 @@ function run() {
   
   const issue = context.issue;
   
-  console.log('['+Object.keys(client.issues).join(', ')+']');
+  //console.log('['+Object.keys(client.issues).join(', ')+']');
+  
+  const issue = client.issues.get({
+    owner: issue.owner,
+    repo: issue.repo,
+    issue_number: issue.number
+  });
+  
+  console.log(issue);
   
   client.issues.update({
     owner: issue.owner,
