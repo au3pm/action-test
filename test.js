@@ -29,7 +29,7 @@ function run() {
   
   //console.log('['+Object.keys(client.issues).join(', ')+']');
   
-  const issue2 = client.issues.get({
+  client.issues.get({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number
@@ -61,7 +61,7 @@ function run() {
 
       console.log("done");
     });
-  })
+  }).catch(e => console.error(`there was a problem, getting repo: "${owner}/${repo}"`, e));
 }
 
 run();
