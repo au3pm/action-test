@@ -2,6 +2,8 @@ var core = require('@actions/core');
 var github = require('@actions/github');
 
 function run() {
+  console.log('['+Object.keys(process.env).join(', ')+']');
+  
   const client = github.GitHub = new github.GitHub(
     core.getInput('GITHUB_TOKEN', {required: true})
   );
