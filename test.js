@@ -1,5 +1,5 @@
-import core from '@actions/core';
-import github from '@actions/github';
+var core = require('@actions/core');
+var github require('@actions/github');
 
 function run() {
   const client: github.GitHub = new github.GitHub(
