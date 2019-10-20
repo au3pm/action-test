@@ -58,7 +58,7 @@ async function run() {
         sha1 = client.repos.listCommits({owner: owner, repo: repo, per_page: 1, sha: body[2]}).then(response => response.data[0].sha).catch(e => false);
       }
       
-      path = `./${}/au3pm.js`;
+      path = `./${directory[package]}/au3pm.js`;
       const packageDirectory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {};
       const versionExists = directory.hasOwnProperty(version);
     
