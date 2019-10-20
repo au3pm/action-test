@@ -1,5 +1,6 @@
 var core = require('@actions/core');
 var github = require('@actions/github');
+const fs = require('fs');
 
 function run() {
   const client = github.GitHub = new github.GitHub(
@@ -27,8 +28,6 @@ function run() {
   
   const issue = context.issue;
   
-  //console.log('['+Object.keys(client.issues).join(', ')+']');
-  
   client.issues.get({
     owner: issue.owner,
     repo: issue.repo,
@@ -39,18 +38,39 @@ function run() {
     
     const owner = data.user.login;
     const package = data.title;
+    //TODO: validate package
+    //TODO: if package does not exist, check directory agenst folder name conflicts. and generate a new if true.
     const repo = body[0] || package;
     
     client.repos.get({
       owner: owner,
       repo: repo
     }).then(response => response.data).then(data => {
-      const version = body[1] || 'FIXME';
-      const sha1 = body[2] || 'FIXME';
+      //TODO: if fork, maybe do something, to try and avoid people copying packages under another name, with no diff?
+      let path = 'au3pm.js';
+      const directory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {};
+      const packageExists = directory.hasOwnProperty(package);
+      
+      const version = body[1] || (packageExists ? 'FIXME: increment minor version' : "1.0.0");
+      const validVersion = /^[0-9]+.[0-9]+.[0-9]+$/.test(version);//TODO: if !valid, do not calc sha1 or load more files. (throw an error or something)
+      let sha1 = body[2] || await client.repos.listCommits({owner: owner, repo: repo, per_page: 1}).then(response => response.data[0].sha).catch(false);
+      if (body[2]) {
+        sha1 = client.repos.listCommits({owner: owner, repo: repo, per_page: 1, sha: body[2]}).then(response => response.data[0].sha).catch(e => false);
+      }
+      
+      path = `./${}/au3pm.js`;
+      const packageDirectory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {};
+      const versionExists = directory.hasOwnProperty(version);
     
       //`${owner}/${package}`
       console.log(data);
-
+      
+      client.issues.createComment({
+        owner: issue.owner,
+        repo: issue.repo,
+        issue_number: issue.number,
+        body: `"${owner}/${repo}" => ${package}`
+      });
 
       client.issues.update({
         owner: issue.owner,
