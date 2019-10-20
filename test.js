@@ -45,7 +45,7 @@ async function run() {
     client.repos.get({
       owner: owner,
       repo: repo
-    }).then(async response => response.data).then(data => {
+    }).then(response => response.data).then(async data => {
       //TODO: if fork, maybe do something, to try and avoid people copying packages under another name, with no diff?
       let path = 'au3pm.js';
       const directory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {};
