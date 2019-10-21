@@ -63,7 +63,7 @@ async function run() {
       
       if (!packageExists) {
         directory[package] = formattedPackage;
-        fs.writeFile(path, JSON.stringify(directory));
+        fs.writeFileSync(path, JSON.stringify(directory));
       }
       
       path = `./${directory[package] || formattedPackage}/au3pm.js`;
@@ -76,7 +76,7 @@ async function run() {
     
       if (!versionExists) {
         packageDirectory[version] = sha1;
-        fs.writeFile(path, JSON.stringify(packageDirectory));
+        fs.writeFileSync(path, JSON.stringify(packageDirectory));
       }
       // console.log(data);
       
