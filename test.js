@@ -77,7 +77,7 @@ async function run() {
     
       if (!versionExists) {
         if (!fs.existsSync(node_path.dirname(path) + '/')) {fs.mkdirSync(node_path.dirname(path) + '/', {recursive: true})}
-        packageDirectory[version] = sha1;
+        packageDirectory.versions[version] = sha1;
         fs.writeFileSync(path, JSON.stringify(packageDirectory));
       }
       // console.log(data);
