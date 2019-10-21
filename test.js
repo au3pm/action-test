@@ -18,15 +18,11 @@ async function run() {
   // Do nothing if its not a pr or issue
   const isIssue = !!context.payload.issue;
   if (!isIssue && !!context.payload.pull_request) {
-    console.log(
-      'The event that triggered this action was a pull request or not a issue, skipping.'
-    );
+    console.log('The event that triggered this action was a pull request or not a issue, skipping.');
     return;
   }
   
-  if (!context.payload.sender) {
-    throw new Error('Internal error, no sender provided by GitHub');
-  }
+  if (!context.payload.sender) throw new Error('Internal error, no sender provided by GitHub');
   
   const issue = context.issue;
   
@@ -65,6 +61,11 @@ async function run() {
       let sha1 = body[2] || await client.repos.listCommits({owner: owner, repo: repo, per_page: 1}).then(response => response.data[0].sha).catch(false);
       if (body[2]) {
         sha1 = client.repos.listCommits({owner: owner, repo: repo, per_page: 1, sha: body[2]}).then(response => response.data[0].sha).catch(e => false);
+      }
+      
+      if (!packageExists) {
+        directory[package] = formattedPackage;
+        fs.writeFile(path, JSON.stringify(directory));
       }
       
       path = `./${directory[package] || formattedPackage}/au3pm.js`;
