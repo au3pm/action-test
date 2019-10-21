@@ -26,7 +26,7 @@ async function run() {
   
   const issue = context.issue;
   
-  client.issues.get({
+  await client.issues.get({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number
@@ -84,7 +84,7 @@ async function run() {
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
-        body: `"${owner}/${repo}" => ${package}`
+        body: `:heavy_check_mark: "${owner}/${repo}" => ${package}`
       });
 
       client.issues.update({
@@ -100,7 +100,7 @@ async function run() {
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
-        body: e instanceof PackageError ? `"${owner}/${repo}": ${e.message}` : `"${owner}/${repo}": ${e.status}`
+        body: e instanceof PackageError ? `:x: "${owner}/${repo}": ${e.message}` : `:heavy_exclamation_mark: "${owner}/${repo}": ${e.status}`
       });
       
       client.issues.update({
@@ -113,4 +113,4 @@ async function run() {
   });
 }
 
-run();
+await run();
