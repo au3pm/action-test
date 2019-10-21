@@ -1,0 +1,1 @@
+{"repo":"genius257/AutoItObject-Internal","versions":{"1.0.0":"b07ee98cae4d535f45379f322a0d9e2e464b972b"}}
