@@ -36,7 +36,7 @@ async function run() {
 
     const owner = data.user.login;
     const package = data.title;
-    if (!/^[a-ZA-z -_0-9]+$/.test(package) || !package.trim()) {
+    if (!/^[a-zA-Z -_0-9]+$/.test(package) || !package.trim()) {
       throw new PackageError(`Invalid package name: ${package}`);
     }
     
