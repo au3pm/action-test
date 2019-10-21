@@ -17,5 +17,9 @@ jobs:
       env:
         INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: node test.js
-    - run: git add -A
-    - run: git diff-index --quiet HEAD || git commit -m 'manage_package'
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff-index --quiet HEAD || git commit -m 'manage_package'
