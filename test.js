@@ -48,7 +48,7 @@ async function run() {
       repo: repo
     }).then(response => response.data).then(async data => {
       //TODO: if fork, maybe do something, to try and avoid people copying packages under another name, with no diff?
-      let path = 'au3pm.js';
+      let path = 'au3pm.json';
       const directory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {};
       const packageExists = directory.hasOwnProperty(package);
       const formattedPackage = package.replace(/ /g, '_');
@@ -67,7 +67,7 @@ async function run() {
         fs.writeFileSync(path, JSON.stringify(directory));
       }
       
-      path = `./${directory[package] || formattedPackage}/au3pm.js`;
+      path = `./${directory[package] || formattedPackage}/au3pm.json`;
       
       const packageDirectory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {repo: data.full_name, versions: {}};
       const fIncrement = v => {let a = v.split(".");a[1]++;return a.join(".");};
