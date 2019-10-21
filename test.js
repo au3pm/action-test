@@ -2,6 +2,8 @@ var core = require('@actions/core');
 var github = require('@actions/github');
 const fs = require('fs');
 
+class PackageError extends Error {}
+
 async function run() {
   const client = github.GitHub = new github.GitHub(
     core.getInput('GITHUB_TOKEN', {required: true})
@@ -35,11 +37,13 @@ async function run() {
   }).then(response => response.data).then(async data => {
     
     const body = data.body.match(/^(.*)$/mg);
-    
+
     const owner = data.user.login;
     const package = data.title;
-    //TODO: validate package
-    //TODO: if package does not exist, check directory agenst folder name conflicts. and generate a new if true.
+    if (!/^[a-ZA-z -_0-9]+$/.test(package) || !package.trim()) {
+      throw new PackageError(`Invalid package name: ${package}`);
+    }
+    
     const repo = body[0] || package;
     
     client.repos.get({
@@ -50,6 +54,11 @@ async function run() {
       let path = 'au3pm.js';
       const directory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {};
       const packageExists = directory.hasOwnProperty(package);
+      const formattedPackage = package.replace(/ /g, '_');
+      
+      if (!packageExists && fs.existsSync(`./${formattedPackage}/`)) {
+        throw new PackageError(`Package name already taken: ${package}`);
+      }
       
       const version = body[1] || (packageExists ? 'FIXME: increment minor version' : "1.0.0");
       const validVersion = /^[0-9]+.[0-9]+.[0-9]+$/.test(version);//TODO: if !valid, do not calc sha1 or load more files. (throw an error or something)
@@ -58,12 +67,12 @@ async function run() {
         sha1 = client.repos.listCommits({owner: owner, repo: repo, per_page: 1, sha: body[2]}).then(response => response.data[0].sha).catch(e => false);
       }
       
-      path = `./${directory[package]}/au3pm.js`;
+      path = `./${directory[package] || formattedPackage}/au3pm.js`;
       const packageDirectory = fs.existsSync(path) ? JSON.parse(fs.readFileSync(path)) : {};
       const versionExists = directory.hasOwnProperty(version);
     
-      //`${owner}/${package}`
-      console.log(data);
+      fs.writeFile(path, JSON.stringify(packageDirectory));
+      // console.log(data);
       
       client.issues.createComment({
         owner: issue.owner,
@@ -85,7 +94,7 @@ async function run() {
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
-        body: `"${owner}/${repo}": ${e.status}`
+        body: e instanceof PackageError ? `"${owner}/${repo}": ${e.message}` : `"${owner}/${repo}": ${e.status}`
       });
       
       client.issues.update({
