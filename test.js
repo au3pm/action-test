@@ -1,6 +1,7 @@
 var core = require('@actions/core');
 var github = require('@actions/github');
 const fs = require('fs');
+const node_path = require('path');
 
 class PackageError extends Error {}
 
@@ -75,6 +76,7 @@ async function run() {
       const validVersion = /^[0-9]+.[0-9]+.[0-9]+$/.test(version);//TODO: if !valid, do not calc sha1 or load more files. (throw an error or something)
     
       if (!versionExists) {
+        if (!fs.existsSync(node_path.dirname(path) + '/')) {fs.mkdirSync(node_path.dirname(path) + '/', {recursive: true})}
         packageDirectory[version] = sha1;
         fs.writeFileSync(path, JSON.stringify(packageDirectory));
       }
@@ -102,7 +104,7 @@ async function run() {
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
-        body: e instanceof PackageError ? `:x: "${owner}/${repo}": ${e.message}` : `:heavy_exclamation_mark: "${owner}/${repo}": ${e.status}`
+        body: e instanceof PackageError ? `:x: "${owner}/${repo}": ${e.message}` : `:heavy_exclamation_mark: "${owner}/${repo}": ${e.status || 'internal error occured'}`
       });
       
       client.issues.update({
