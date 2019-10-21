@@ -96,6 +96,8 @@ async function run() {
 
       console.log("done");
     }).catch(e => {
+      console.error(e);
+      
       client.issues.createComment({
         owner: issue.owner,
         repo: issue.repo,
