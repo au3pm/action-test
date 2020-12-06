@@ -6,7 +6,7 @@ const node_path = require('path');
 class PackageError extends Error {}
 
 async function run() {
-  const client = github.GitHub = new github.getOctokit(
+  const client = new github.getOctokit(
     core.getInput('GITHUB_TOKEN', {required: true})
   );
   const context = github.context;
