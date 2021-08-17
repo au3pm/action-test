@@ -42,9 +42,9 @@ async function run() {
         exit(1);
       }
       await octokit.rest.issues.deleteLabel({
-        issue.owner,
-        issue.repo,
-        'package',
+        owner: issue.owner,
+        repo: issue.repo,
+        name: 'package',
       });
     }
     
