@@ -12,9 +12,10 @@ async function run() {
   const octokit = github.getOctokit(token);
   const context = github.context;
   
-  if(context.payload.action !== 'opened') {
+  if(context.payload.action !== 'opened' && context.payload.action !== 'labeled') {
     console.log('No issue or PR was opened, skipping');
-    //return;
+    exit(1);
+    return;
   }
   
   // Do nothing if its not a pr or issue
@@ -27,12 +28,25 @@ async function run() {
   if (!context.payload.sender) throw new Error('Internal error, no sender provided by GitHub');
   
   const issue = context.issue;
+  console.log(issue);
   
   await octokit.rest.issues.get({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number
   }).then(response => response.data).then(async data => {
+    
+    if (context.payload.action === 'labeled') {
+      if (data.labels.find(label => label === 'package') === undefined) {
+        console.log('The issue label triggering this action was not "package"');
+        exit(1);
+      }
+      await octokit.rest.issues.deleteLabel({
+        issue.owner,
+        issue.repo,
+        'package',
+      });
+    }
     
     const body = data.body.match(/^(.*)$/mg);
     
