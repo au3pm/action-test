@@ -6,14 +6,14 @@ const node_path = require('path');
 class PackageError extends Error {}
 
 async function run() {
-  const client = new github.getOctokit(
-    core.getInput('GITHUB_TOKEN', {required: true})
-  );
+  const token = core.getInput('GITHUB_TOKEN', {required: true});
+  
+  const octokit = github.getOctokit(token);
   const context = github.context;
   
   if(context.payload.action !== 'opened') {
     console.log('No issue or PR was opened, skipping');
-    return;
+    //return;
   }
   
   // Do nothing if its not a pr or issue
@@ -27,7 +27,7 @@ async function run() {
   
   const issue = context.issue;
   
-  await client.issues.get({
+  await octokit.rest.issues.get({
     owner: issue.owner,
     repo: issue.repo,
     issue_number: issue.number
@@ -43,7 +43,7 @@ async function run() {
     
     const repo = body[0] || package;
     
-    client.repos.get({
+    octokit.rest.repos.get({
       owner: owner,
       repo: repo
     }).then(response => response.data).then(async data => {
@@ -57,9 +57,9 @@ async function run() {
         throw new PackageError(`Package name already taken: ${package}`);
       }
       
-      let sha1 = body[2] || await client.repos.listCommits({owner: owner, repo: repo, per_page: 1}).then(response => response.data[0].sha).catch(false);
+      let sha1 = body[2] || await octokit.rest.repos.listCommits({owner: owner, repo: repo, per_page: 1}).then(response => response.data[0].sha).catch(false);
       if (body[2]) {
-        sha1 = client.repos.listCommits({owner: owner, repo: repo, per_page: 1, sha: body[2]}).then(response => response.data[0].sha).catch(e => false);
+        sha1 = octokit.rest.repos.listCommits({owner: owner, repo: repo, per_page: 1, sha: body[2]}).then(response => response.data[0].sha).catch(e => false);
       }
       
       if (!packageExists) {
@@ -82,14 +82,14 @@ async function run() {
       }
       // console.log(data);
       
-      client.issues.createComment({
+      octokit.rest.issues.createComment({
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
         body: `:heavy_check_mark: "${owner}/${repo}" => ${package}`
       });
 
-      client.issues.update({
+      octokit.rest.issues.update({
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
@@ -100,14 +100,14 @@ async function run() {
     }).catch(e => {
       console.error(e);
       
-      client.issues.createComment({
+      octokit.rest.issues.createComment({
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
         body: e instanceof PackageError ? `:x: "${owner}/${repo}": ${e.message}` : `:heavy_exclamation_mark: "${owner}/${repo}": ${e.status || 'internal error occured'}`
       });
       
-      client.issues.update({
+      octokit.rest.issues.update({
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
