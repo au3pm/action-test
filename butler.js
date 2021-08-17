@@ -109,21 +109,21 @@ async function run() {
     }).catch(e => {
       console.error(e);
       
-      await octokit.rest.issues.createComment({
+      octokit.rest.issues.createComment({
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
         body: e instanceof PackageError ? `:x: "${owner}/${repo}": ${e.message}` : `:heavy_exclamation_mark: "${owner}/${repo}": ${e.status || 'internal error occured'}`
+      }).then(() => {
+        octokit.rest.issues.update({
+          owner: issue.owner,
+          repo: issue.repo,
+          issue_number: issue.number,
+          state: 'closed'
+        }).then(() => {
+          exit(1);
+        });
       });
-      
-      await octokit.rest.issues.update({
-        owner: issue.owner,
-        repo: issue.repo,
-        issue_number: issue.number,
-        state: 'closed'
-      });
-      
-      exit(1);
     });
   });
 }
