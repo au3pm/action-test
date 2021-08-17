@@ -1,8 +1,10 @@
 name: "issue-butler"
 
-on: 
+on:
   issues:
     types: [opened]
+  issue_comment:
+    types: [created]
 
 jobs:
   manage_package:
