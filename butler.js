@@ -28,7 +28,6 @@ async function run() {
   if (!context.payload.sender) throw new Error('Internal error, no sender provided by GitHub');
   
   const issue = context.issue;
-  console.log(issue);
   
   await octokit.rest.issues.get({
     owner: issue.owner,
@@ -37,7 +36,7 @@ async function run() {
   }).then(response => response.data).then(async data => {
     
     if (context.payload.action === 'labeled') {
-      if (data.labels.find(label => label === 'package') === undefined) {
+      if (data.labels.find(label => label.name === 'package') === undefined) {
         console.log('The issue label triggering this action was not "package"');
         exit(1);
       }
