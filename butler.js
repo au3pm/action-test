@@ -1,6 +1,6 @@
-import { exit } from 'process';
-var core = require('@actions/core');
-var github = require('@actions/github');
+const exit = require('process').exit;
+const core = require('@actions/core');
+const github = require('@actions/github');
 const fs = require('fs');
 const node_path = require('path');
 
