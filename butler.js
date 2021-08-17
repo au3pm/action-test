@@ -94,7 +94,7 @@ async function run() {
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
-        body: `:heavy_check_mark: "${owner}/${repo}" => ${package}`
+        body: `:heavy_check_mark: "${packageOwner}/${packageRepository}" => ${packageName}`
       });
 
       octokit.rest.issues.update({
@@ -113,7 +113,7 @@ async function run() {
         owner: issue.owner,
         repo: issue.repo,
         issue_number: issue.number,
-        body: e instanceof PackageError ? `:x: "${owner}/${repo}": ${e.message}` : `:heavy_exclamation_mark: "${owner}/${repo}": ${e.status || 'internal error occured'}`
+        body: e instanceof PackageError ? `:x: "${packageOwner}/${packageRepository}": ${e.message}` : `:heavy_exclamation_mark: "${packageOwner}/${packageRepository}": ${e.status || 'internal error occured'}`
       }).then(() => {
         octokit.rest.issues.update({
           owner: issue.owner,
