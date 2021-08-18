@@ -57,6 +57,7 @@ async function run() {
 
     //const owner = data.user.login;
     //const package = data.title;
+    //FIXME: regex should be changed. Also currently the range between [space] and [underscore] are accepted by accident!
     if (!/^[a-zA-Z -_0-9]+$/.test(packageName) || !packageName.trim()) {
       throw new PackageError(`Invalid package name: ${packageName}`);
     }
