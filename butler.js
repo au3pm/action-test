@@ -93,7 +93,7 @@ async function run() {
       const version = packageVersion || (packageExists ? fIncrement(Object.keys(packageDirectory.versions).sort().reverse()[0] || "1.0.0") : "1.0.0");
       const versionExists = directory.hasOwnProperty(version);
       //FIXME: use regex from repo web page.
-      const validVersion = /^[0-9]+.[0-9]+.[0-9]+$/.test(version);//TODO: if !valid, do not calc sha1 or load more files. (throw an error or something)
+      const validVersion = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/.test(version);//TODO: if !valid, do not calc sha1 or load more files. (throw an error or something)
     
       if (!versionExists) {
         if (!fs.existsSync(node_path.dirname(path) + '/')) {fs.mkdirSync(node_path.dirname(path) + '/', {recursive: true})}
@@ -117,6 +117,7 @@ async function run() {
       });
 
       console.log("done");
+      throw new PackageError("[DEBUG]");
     }).catch(e => {
       console.error(e);
       
