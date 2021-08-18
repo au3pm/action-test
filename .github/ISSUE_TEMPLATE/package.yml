@@ -4,13 +4,12 @@ title: "[Package]: "
 labels: [package]
 body:
   - type: input
-    id: contact
+    id: packageName
     attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
+      label: Package name
+      description: The the package name used for lookup via the au3pm tool
     validations:
-      required: false
+      required: true
   - type: textarea
     id: what-happened
     attributes:
