@@ -118,7 +118,6 @@ async function run() {
       });
 
       console.log("done");
-      throw new PackageError(`[Debug] All good`);
     }).catch(e => {
       console.error(e);
       
