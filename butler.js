@@ -40,9 +40,10 @@ async function run() {
         console.log('The issue label triggering this action was not "package"');
         exit(1);
       }
-      await octokit.rest.issues.deleteLabel({
+      await octokit.rest.issues.removeLabel({
         owner: issue.owner,
         repo: issue.repo,
+        issue_number: issue.number,
         name: 'package',
       });
     }
