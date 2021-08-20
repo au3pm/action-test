@@ -117,9 +117,9 @@ async function run() {
         state: 'closed'
       });
 
-      console.log("done");
-      console.log(packageDirectory);
-      throw new PackageError("[DEBUG]");
+      //console.log("done");
+      //console.log(packageDirectory);
+      //throw new PackageError("[DEBUG]");
     }).catch(e => {
       console.error(e);
       
