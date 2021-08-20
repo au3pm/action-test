@@ -78,8 +78,9 @@ async function run() {
       
       let sha1 = packageSha || await octokit.rest.repos.listCommits({owner: packageOwner, repo: packageRepository, per_page: 1}).then(response => response.data[0].sha).catch(false);
       if (packageSha) {
-        sha1 = octokit.rest.repos.listCommits({owner: packageOwner, repo: packageRepository, per_page: 1, sha: packageSha}).then(response => response.data[0].sha).catch(e => false);
+        sha1 = await octokit.rest.repos.listCommits({owner: packageOwner, repo: packageRepository, per_page: 1, sha: packageSha}).then(response => response.data[0].sha).catch(e => false);
       }
+      //FIXME: validate sha1 is not null
       
       if (!packageExists) {
         directory[packageName] = formattedPackage;
