@@ -10,6 +10,17 @@ body:
       description: The the package name used for lookup via the au3pm tool
     validations:
       required: true
+  - type: dopdown
+    id: action
+    attributes:
+      label: Please select package action
+      options:
+        - Create
+        - Update
+        - Delete
+        - Remove
+    validations:
+      required: true
   - type: textarea
     id: what-happened
     attributes:
