@@ -10,7 +10,7 @@ body:
       description: The the package name used for lookup via the au3pm tool
     validations:
       required: true
-  - type: dopdown
+  - type: dropdown
     id: action
     attributes:
       label: Please select package action
